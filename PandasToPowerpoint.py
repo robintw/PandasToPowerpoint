@@ -1,8 +1,37 @@
+import six
 from pptx import Presentation
 from pptx.util import Inches, Pt
 import pandas as pd
+from math import *
 
-def df_to_table(slide, df, col_formatters=None, rounding=None):
+round_to_n = lambda x, n: round(x, -int(floor(log10(abs(x)))) + (n - 1))
+
+def _do_formatting(value, format_str):
+    """Format value according to format_str, and deal
+    sensibly with format_str if it is missing or invalid."""
+    if format_str == '':
+        if type(value) in six.integer_types:
+            format_str = ','
+        elif type(value) is float:
+            format_str = 'f'
+        elif type(value) is str:
+            format_str = 's'
+    elif format_str[0] == '.':
+        if format_str.endswith('R'):
+            if type(value) in six.integer_types:
+                value = round_to_n(value, int(format_str[1]))
+                format_str = ','
+        if not format_str.endswith('G'):
+            format_str = format_str + "G"
+    try:
+        value = format(value, format_str)
+    except:
+        value = format(value, '')
+
+    return value
+
+
+def df_to_table(slide, df, left, top, width, height, colnames=None, col_formatters=None, rounding=None):
     """Converts a Pandas DataFrame to a PowerPoint table on the given
     Slide of a PowerPoint presentation.
     
@@ -23,10 +52,13 @@ def df_to_table(slide, df, col_formatters=None, rounding=None):
      rounds away the 3 right-hand digits (eg. taking 25437 to 25000).
      """
     rows, cols = df.shape
-    res = slide.shapes.add_table(rows+1, cols, Inches(1), Inches(1), Inches(3), Inches(3))
+    res = slide.shapes.add_table(rows+1, cols, left, top, width, height)
     
+    if colnames is None:
+        colnames = list(df.columns)
+
     # Insert the column names
-    for col_index, col_name in enumerate(df.columns):
+    for col_index, col_name in enumerate(colnames):
         res.table.cell(0,col_index).text = col_name
         
     m = df.as_matrix()
@@ -35,17 +67,11 @@ def df_to_table(slide, df, col_formatters=None, rounding=None):
         for col in range(cols):
             val = m[row, col]
             
-            try:
-                round_amount = rounding[col]
-                val = int(round(val, -1*round_amount))
-            except:
-                pass
-            
             if col_formatters is None:
                 text = str(val)
             else:
                 #text = col_formatters[col].format(m[row, col])
-                text = format(val, col_formatters[col])
+                text = _do_formatting(val, col_formatters[col])
             
             res.table.cell(row+1, col).text = text
             #res.table.cell(row+1, col).text_frame.fit_text()
