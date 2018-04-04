@@ -40,8 +40,12 @@ Optional arguments:
  in the second column, and formats the third column as a float with 2 decimal places.
  - rounding: A n_columns element long list containing a number for each integer column that requires rounding
  that is then multiplied by -1 and passed to `round()`. The practical upshot of this is that you can give something like
- `['', 3, '']`, which does nothing for the 1st and 3rd columns (as they aren't integer values), but for the 2nd column,
- rounds away the 3 right-hand digits (eg. taking 25437 to 25000).
+ `['', 3, '']`, which does nothing for the 1st and 3rd columns (as they aren't integer values), but for the 2nd column, rounds away the 3 right-hand digits (eg. taking 25437 to 25000).
+ - name: A name to be given to the table in the Powerpoint file. This is not displayed, but can help
+ extract the table later to make further changes.
+
+ Returns:
+ The python-pptx table object that was created (which can then be used to do further manipulation if desired)
 
 ### df_to_powerpoint
 Converts a Pandas DataFrame to a table in a new, blank PowerPoint presentation.
@@ -58,3 +62,6 @@ Arguments:
 
 All other arguments that can be taken by `df_to_table()` (such as left, width, col_formatters or rounding) can also
 be passed here.
+
+Returns:
+The python-pptx table object that was created (which can then be used to do further manipulation if desired)
