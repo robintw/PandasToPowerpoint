@@ -26,25 +26,26 @@ The table is a standard Powerpoint table, and can easily be modified with the Po
 for example: resizing columns, changing formatting etc.
 
 Arguments:
- - slide: slide object from the python-pptx library containing the slide on which you want the table to appear
- - df: Pandas DataFrame with the data
+ - `slide`: slide object from the python-pptx library containing the slide on which you want the table to appear
+ - `df`: Pandas DataFrame with the data
  
 Optional arguments:
- - left: Position of the left-side of the table, either as an integer in cm, or as an instance of a
-   pptx.util Length class (pptx.util.Inches for example). Defaults to 4cm.
- - top: Position of the top of the table, takes parameters as above.
- - width: Width of the table, takes parameters as above.
- - height: Height of the table, takes parameters as above.
- - col_formatters: A n_columns element long list containing format specifications for each column.
+ - `left`: Position of the left-side of the table, either as an integer in cm, or as an instance of a
+   `pptx.util` Length class (`pptx.util.Inches` for example). Defaults to 4cm.
+ - `top`: Position of the top of the table, takes parameters as above.
+ - `width`: Width of the table, takes parameters as above.
+ - `height`: Height of the table, takes parameters as above.
+ - `col_formatters`: A `n_columns` element long list containing format specifications for each column.
  For example `['', ',', '.2']` does no special formatting for the first column, uses commas as thousands separators
  in the second column, and formats the third column as a float with 2 decimal places.
- - rounding: A n_columns element long list containing a number for each integer column that requires rounding
+ - `rounding`: A n_columns element long list containing a number for each integer column that requires rounding
  that is then multiplied by -1 and passed to `round()`. The practical upshot of this is that you can give something like
  `['', 3, '']`, which does nothing for the 1st and 3rd columns (as they aren't integer values), but for the 2nd column, rounds away the 3 right-hand digits (eg. taking 25437 to 25000).
- - name: A name to be given to the table in the Powerpoint file. This is not displayed, but can help
+ - `name`: A name to be given to the table in the Powerpoint file. This is not displayed, but can help
  extract the table later to make further changes.
 
  Returns:
+
  The python-pptx table object that was created (which can then be used to do further manipulation if desired)
 
 ### df_to_powerpoint
@@ -57,11 +58,12 @@ The table is a standard Powerpoint table, and can easily be modified with the Po
 for example: resizing columns, changing formatting etc.
 
 Arguments:
- - filename: Filename to save the PowerPoint presentation as
- - df: Pandas DataFrame with the data
+ - `filename`: Filename to save the PowerPoint presentation as
+ - `df`: Pandas DataFrame with the data
 
-All other arguments that can be taken by `df_to_table()` (such as left, width, col_formatters or rounding) can also
+All other arguments that can be taken by `df_to_table()` (such as `left`, `width`, `col_formatters` or `rounding`) can also
 be passed here.
 
 Returns:
+
 The python-pptx table object that was created (which can then be used to do further manipulation if desired)
