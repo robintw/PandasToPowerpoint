@@ -30,6 +30,11 @@ Arguments:
  - df: Pandas DataFrame with the data
  
 Optional arguments:
+ - left: Position of the left-side of the table, either as an integer in cm, or as an instance of a
+   pptx.util Length class (pptx.util.Inches for example). Defaults to 4cm.
+ - top: Position of the top of the table, takes parameters as above.
+ - width: Width of the table, takes parameters as above.
+ - height: Height of the table, takes parameters as above.
  - col_formatters: A n_columns element long list containing format specifications for each column.
  For example `['', ',', '.2']` does no special formatting for the first column, uses commas as thousands separators
  in the second column, and formats the third column as a float with 2 decimal places.
@@ -51,5 +56,5 @@ Arguments:
  - filename: Filename to save the PowerPoint presentation as
  - df: Pandas DataFrame with the data
 
-All other arguments that can be taken by `df_to_table()` (such as col_formatters or rounding) can also
+All other arguments that can be taken by `df_to_table()` (such as left, width, col_formatters or rounding) can also
 be passed here.
