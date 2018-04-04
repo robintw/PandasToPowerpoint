@@ -1,6 +1,6 @@
 import six
 from pptx import Presentation
-from pptx.util import Inches, Pt
+from pptx.util import Cm, Pt
 import pandas as pd
 from math import *
 
@@ -30,8 +30,23 @@ def _do_formatting(value, format_str):
 
     return value
 
+def process_position_parameter(param):
+    """Process positioning parameters (left, top, width, height) given to
+    df_to_table.
 
-def df_to_table(slide, df, left, top, width, height, colnames=None, col_formatters=None, rounding=None):
+    If an integer, returns the right instance of the Cm class to allow it to be treated
+    as cm. If missing, then default to 4cm. Otherwise, pass through whatever it gets.
+    """
+    if param is None:
+        return Cm(4)
+    elif type(param) is int:
+        return Cm(param)
+    else:
+        return param
+
+
+def df_to_table(slide, df, left=None, top=None, width=None, height=None,
+                colnames=None, col_formatters=None, rounding=None):
     """Converts a Pandas DataFrame to a PowerPoint table on the given
     Slide of a PowerPoint presentation.
     
@@ -43,6 +58,11 @@ def df_to_table(slide, df, left, top, width, height, colnames=None, col_formatte
      - df: Pandas DataFrame with the data
      
     Optional arguments:
+     - left: Position of the left-side of the table, either as an integer in cm, or as an instance of a
+     pptx.util Length class (pptx.util.Inches for example). Defaults to 4cm.
+     - top: Position of the top of the table, takes parameters as above.
+     - width: Width of the table, takes parameters as above.
+     - height: Height of the table, takes parameters as above.
      - col_formatters: A n_columns element long list containing format specifications for each column.
      For example ['', ',', '.2'] does no special formatting for the first column, uses commas as thousands separators
      in the second column, and formats the third column as a float with 2 decimal places.
@@ -51,6 +71,11 @@ def df_to_table(slide, df, left, top, width, height, colnames=None, col_formatte
      ['', 3, ''], which does nothing for the 1st and 3rd columns (as they aren't integer values), but for the 2nd column,
      rounds away the 3 right-hand digits (eg. taking 25437 to 25000).
      """
+    left = process_position_parameter(left)
+    top = process_position_parameter(top)
+    width = process_position_parameter(width)
+    height = process_position_parameter(height)
+
     rows, cols = df.shape
     res = slide.shapes.add_table(rows+1, cols, left, top, width, height)
     
