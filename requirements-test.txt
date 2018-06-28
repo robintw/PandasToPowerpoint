@@ -1,0 +1,4 @@
+pandas
+six
+python-pptx
+pytest
