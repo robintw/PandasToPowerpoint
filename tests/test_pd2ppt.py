@@ -2,6 +2,7 @@ import os
 import pandas as pd
 import pd2ppt
 
+from pptx.util import Cm
 from pd2ppt import df_to_powerpoint
 
 
@@ -123,6 +124,14 @@ def test_do_formatting_decimal_end_with_R():
 
 
 
+def test_process_position_parameter():
+    assert pd2ppt.pd2ppt.process_position_parameter(None) == Cm(4)
+    assert pd2ppt.pd2ppt.process_position_parameter(1) == Cm(1)
+    assert pd2ppt.pd2ppt.process_position_parameter(100) == Cm(100)
+    assert pd2ppt.pd2ppt.process_position_parameter(1.2) == 1.2
+    assert pd2ppt.pd2ppt.process_position_parameter('3') == '3'
+
+
 
 def test_integration_df_to_powerpoint():
     df = pd.DataFrame(
@@ -130,11 +139,52 @@ def test_integration_df_to_powerpoint():
          'Population':[25000, 500000, 735298, 12653],
          'Ratio':[1.56, 7.34, 3.67, 8.23]})
 
-    df_to_powerpoint(
-        r"test1.pptx", df,
-        col_formatters=['', ',', '.2'], rounding=['', 3, ''])
+    shape = df_to_powerpoint(
+                r"test1.pptx", df,
+                col_formatters=['', ',', '.2'], rounding=['', 3, ''])
 
-    df_to_powerpoint(
-        r"test2.pptx", df,
-        left=1, top=1, width=10, height=15,
-        col_formatters=['', ',', '.2'], rounding=['', 3, ''])
+    assert shape.table.cell(0,0).text_frame.text == "District"
+    assert shape.table.cell(0,1).text_frame.text == "Population"
+    assert shape.table.cell(0,2).text_frame.text == "Ratio"
+
+    assert shape.table.cell(1,0).text_frame.text == "Hampshire"
+    assert shape.table.cell(1,1).text_frame.text == "25,000"
+    assert shape.table.cell(1,2).text_frame.text == "1.6"
+
+    assert shape.table.cell(2,0).text_frame.text == "Dorset"
+    assert shape.table.cell(2,1).text_frame.text == "500,000"
+    assert shape.table.cell(2,2).text_frame.text == "7.3"
+
+    assert shape.table.cell(3,0).text_frame.text == "Wiltshire"
+    assert shape.table.cell(3,1).text_frame.text == "735,298"
+    assert shape.table.cell(3,2).text_frame.text == "3.7"
+
+    assert shape.table.cell(4,0).text_frame.text == "Worcestershire"
+    assert shape.table.cell(4,1).text_frame.text == "12,653"
+    assert shape.table.cell(4,2).text_frame.text == "8.2"
+
+
+    shape = df_to_powerpoint(
+                r"test2.pptx", df,
+                left=1, top=1, width=10, height=15,
+                col_formatters=['', '.', '.3'], rounding=['', 3, ''])
+
+    assert shape.table.cell(0,0).text_frame.text == "District"
+    assert shape.table.cell(0,1).text_frame.text == "Population"
+    assert shape.table.cell(0,2).text_frame.text == "Ratio"
+
+    assert shape.table.cell(1,0).text_frame.text == "Hampshire"
+    assert shape.table.cell(1,1).text_frame.text == "25000"
+    assert shape.table.cell(1,2).text_frame.text == "1.56"
+
+    assert shape.table.cell(2,0).text_frame.text == "Dorset"
+    assert shape.table.cell(2,1).text_frame.text == "500000"
+    assert shape.table.cell(2,2).text_frame.text == "7.34"
+
+    assert shape.table.cell(3,0).text_frame.text == "Wiltshire"
+    assert shape.table.cell(3,1).text_frame.text == "735298"
+    assert shape.table.cell(3,2).text_frame.text == "3.67"
+
+    assert shape.table.cell(4,0).text_frame.text == "Worcestershire"
+    assert shape.table.cell(4,1).text_frame.text == "12653"
+    assert shape.table.cell(4,2).text_frame.text == "8.23"
