@@ -116,3 +116,20 @@ pptx.shapes.graphfrm.GraphicFrame
     The python-pptx table (GraphicFrame) object that was created (which can
     then be used to do further manipulation if desired)
 ```
+
+
+## UnitTests
+
+To run unittests you can execute the following command:
+
+```bash
+make pytest
+```
+
+or
+
+```bash
+pytest -v --cov-report term-missing --cov=pd2ppt
+```
+
+You will need `pytest` installed in your environment via `pip install -r requirements-test.txt`

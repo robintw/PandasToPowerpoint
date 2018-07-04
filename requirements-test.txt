@@ -2,3 +2,4 @@ pandas
 six
 python-pptx
 pytest
+pytest-cov
