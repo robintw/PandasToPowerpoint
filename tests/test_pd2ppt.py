@@ -1,10 +1,14 @@
 import os
+import sys
 import pandas as pd
 import pd2ppt
 
 from pptx.util import Cm
 from pd2ppt import df_to_powerpoint
 
+
+
+PY_VERSION = sys.version_info[0]
 
 
 def test_do_formatting_missing():
@@ -120,7 +124,12 @@ def test_do_formatting_decimal_end_with_R():
     assert pd2ppt.pd2ppt._do_formatting(12345, '.1R') == '10,000'
     assert pd2ppt.pd2ppt._do_formatting(12345, '.2R') == '12,000'
     assert pd2ppt.pd2ppt._do_formatting(12345, '.3R') == '12,300'
-    assert pd2ppt.pd2ppt._do_formatting(12345, '.4R') == '12,340'
+
+    # this will yield different results with Py2 vs Py3
+    if PY_VERSION >= 3:
+        assert pd2ppt.pd2ppt._do_formatting(12345, '.4R') == '12,340'
+    else:
+        assert pd2ppt.pd2ppt._do_formatting(12345, '.4R') == '12,350'
 
 
 
