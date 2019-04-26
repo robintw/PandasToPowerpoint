@@ -125,7 +125,7 @@ def df_to_table(slide, df, left=None, top=None, width=None, height=None,
     for col_index, col_name in enumerate(colnames):
         shp.table.cell(0,col_index).text = col_name
 
-    m = df.as_matrix()
+    m = df.values()
 
     for row in range(rows):
         for col in range(cols):
